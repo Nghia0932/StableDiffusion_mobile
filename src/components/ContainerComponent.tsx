@@ -17,13 +17,15 @@ const ContainerComponent = (props: Props) => {
   ) : (
     <View>{children}</View>
   );
-  return isImageBackground ? (
+  return !isImageBackground ? (
     <ImageBackground
       source={require('../assets/images/backg_splashcreen.png')}
       style={{flex: 1}}
       imageStyle={{flex: 1}}
     >
-      <SafeAreaView style={{flex: 1}}> {returnContainer}</SafeAreaView>
+      <SafeAreaView style={{flex: 1}}>
+        <View>{returnContainer}</View>
+      </SafeAreaView>
     </ImageBackground>
   ) : (
     <SafeAreaView style={globalStyle.container}>
