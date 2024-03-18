@@ -1,24 +1,35 @@
-import {View, Text} from 'react-native';
-import React from 'react';
-import {globalStyle} from '../../styles/globalStyles';
-import {ButtonComponent} from '../../components';
+import React, {useState} from 'react';
+import {
+  ContainerComponent,
+  InputComponent,
+  TextComponent,
+} from '../../components';
+import {Lock, Sms} from 'iconsax-react-native';
+import {appColors} from '../../constants/appColors';
+import {View} from 'react-native-reanimated/lib/typescript/Animated';
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
-    <View style={globalStyle.container}>
-      <Text>Login Screen</Text>
-      <ButtonComponent
-        text="forger password"
-        type="link"
-        onPress={() => console.log('login')}
-        icon={
-          <View>
-            <Text>Icon </Text>
-          </View>
-        }
-        textColor="#1518e8"
+    <ContainerComponent isImageBackground>
+      <TextComponent text="hello" />
+      {/*<InputComponent
+        value={email}
+        placehoder="Email"
+        onChange={(val) => setEmail(val)}
+        allowClear
+        affix={<Sms size={22} color={appColors.gray} />}
       />
-    </View>
+      <InputComponent
+        value={password}
+        placehoder="Password"
+        onChange={(val) => setPassword(val)}
+        isPassword
+        affix={<Lock size={22} color={appColors.gray} />}
+      />*/}
+    </ContainerComponent>
   );
 };
 
