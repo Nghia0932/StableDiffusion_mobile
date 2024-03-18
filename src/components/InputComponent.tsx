@@ -8,6 +8,10 @@ import {
   KeyboardType,
 } from 'react-native';
 import React, {ReactNode, useState} from 'react';
+<<<<<<< HEAD
+=======
+import {EyeSlash} from 'iconsax-react-native';
+>>>>>>> 8e03b032e258bcbef3454960409cf52242dee55c
 import {appColors} from '../constants/appColors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {globalStyle} from '../styles/globalStyles';

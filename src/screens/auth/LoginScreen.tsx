@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {View, Image, Switch} from 'react-native';
 import React, {useState} from 'react';
 import {
@@ -12,10 +13,19 @@ import {
 import {Lock, Sms} from 'iconsax-react-native';
 import {appColors} from '../../constants/appColors';
 import SocialLogin from './components/SocialLogin';
+=======
+import {View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {globalStyle} from '../../styles/globalStyles';
+import {ButtonComponent, InputComponent} from '../../components';
+import {Lock, LockCircle, LockSlash, Sms} from 'iconsax-react-native';
+import {appColors} from '../../constants/appColors';
+>>>>>>> 8e03b032e258bcbef3454960409cf52242dee55c
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+<<<<<<< HEAD
   const [isRemember, setIsRemember] = useState(true);
   return (
     <ContainerComponent isImageBackground>
@@ -85,6 +95,35 @@ const LoginScreen = () => {
         </RowComponent>
       </SectionComponent>
     </ContainerComponent>
+=======
+
+  return (
+    <View
+      style={[
+        globalStyle.container,
+        {
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 20,
+        },
+      ]}
+    >
+      <InputComponent
+        value={email}
+        placehoder="Email"
+        onChange={(val) => setEmail(val)}
+        allowClear
+        affix={<Sms size={22} color={appColors.gray} />}
+      />
+      <InputComponent
+        value={password}
+        placehoder="Password"
+        onChange={(val) => setPassword(val)}
+        isPassword
+        affix={<Lock size={22} color={appColors.gray} />}
+      />
+    </View>
+>>>>>>> 8e03b032e258bcbef3454960409cf52242dee55c
   );
 };
 
