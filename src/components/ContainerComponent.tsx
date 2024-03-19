@@ -65,7 +65,7 @@ const ContainerComponent = (props: Props) => {
   };
 
   const returnContainer = isScroll ? (
-    <ScrollView>{children}</ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>{children}</ScrollView>
   ) : (
     <View>{children}</View>
   );
