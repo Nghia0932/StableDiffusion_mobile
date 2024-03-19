@@ -1,4 +1,3 @@
-//LG9lt4dkwBe2sUN2; nghiatran00932
 import {View, Text} from 'react-native';
 import React from 'react';
 import {

@@ -5,43 +5,31 @@ import {SplashScreen} from './src/screens';
 import AuthNavigator from './src/navigators/AuthNavigator';
 import {NavigationContainer} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Provider} from 'react-redux';
+import store from './src/redux/store';
+import AppRouters from './src/navigators/AppRouters';
 export default function App() {
   const [isShowSplash, setIsShowSplash] = useState(true);
-  const [accessToken, setAccessToken] = useState();
-  const {getItem, setItem} = AsyncStorage;
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsShowSplash(false);
     }, 1500);
     return () => clearTimeout(timeout);
   }, []);
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('my-key');
-      if (value !== null) {
-        // value previously stored
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
-  const storeData = async (value: string) => {
-    try {
-      await AsyncStorage.setItem('my-key', value);
-    } catch (e) {
-      // saving error
-    }
-  };
+
   return (
     <>
       <StatusBar style="dark" backgroundColor="transparent" translucent />
-      {isShowSplash ? (
-        <SplashScreen />
-      ) : (
-        <NavigationContainer>
-          <AuthNavigator />
-        </NavigationContainer>
-      )}
+      <Provider store={store}>
+        {isShowSplash ? (
+          <SplashScreen />
+        ) : (
+          <NavigationContainer>
+            <AppRouters />
+          </NavigationContainer>
+        )}
+      </Provider>
     </>
   );
 }
