@@ -36,33 +36,39 @@ const ButtonComponent = (props: Props) => {
     iconFlex,
   } = props;
   return type === 'primary' ? (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[
-        globalStyle.button,
-        {
-          backgroundColor: color ?? appColors.primary,
-        },
-        styles,
-      ]}
-    >
-      {icon && icon}
-      <TextComponent
-        text={text}
-        color={textColor ?? appColors.white}
-        styles={[
-          textStyles,
+    <View style={{alignItems: 'center'}}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={[
+          globalStyle.button,
+          globalStyle.shadow,
           {
-            marginLeft: icon ? 12 : 0,
+            backgroundColor: color ?? appColors.primary,
+            marginBottom: 15,
+            width: '80%',
           },
+          styles,
         ]}
-        flex={icon && iconFlex === 'right' ? 1 : 0}
-        size={16}
-      />
-      {icon && iconFlex === 'right' && icon}
-    </TouchableOpacity>
+      >
+        {icon && iconFlex === 'left' && icon}
+        <TextComponent
+          text={text}
+          color={textColor ?? appColors.white}
+          styles={[
+            textStyles,
+            {
+              marginLeft: icon ? 12 : 0,
+              textAlign: 'center',
+            },
+          ]}
+          flex={icon && iconFlex === 'right' ? 1 : 0}
+          size={16}
+        />
+        {icon && iconFlex === 'right' && icon}
+      </TouchableOpacity>
+    </View>
   ) : (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <TextComponent
         text={text}
         color={type === 'link' ? appColors.primary : appColors.text}
