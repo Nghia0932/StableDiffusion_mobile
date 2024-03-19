@@ -18,7 +18,7 @@ const SocialLogin = () => {
       <ButtonComponent
         type="primary"
         color={appColors.white}
-        text="Login with Google"
+        text="Login with gu gồ"
         textColor={appColors.text}
         icon={
           <Svg width="26" height="26" viewBox="0 0 26 26" fill="none">
@@ -45,7 +45,7 @@ const SocialLogin = () => {
       <ButtonComponent
         type="primary"
         color={appColors.white}
-        text="Login with Meta"
+        text="Login with phây bút"
         textColor={appColors.text}
         icon={
           <Svg width="31" height="31" viewBox="0 0 31 31" fill="none">
