@@ -35,7 +35,11 @@ const ForgotPasswordScreen = () => {
         <ButtonComponent
           text="SEND"
           type="primary"
-          icon={<ArrowRight size={20} color={appColors.white} />}
+          icon={
+            <View style={globalStyle.iconContainer}>
+              <ArrowRight size={20} color={appColors.white} />
+            </View>
+          }
           iconFlex="right"
         />
       </SectionComponent>

@@ -37,7 +37,7 @@ const SignupScreen = ({navigation}: any) => {
   const [values, setValues] = useState(initValue);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<any>();
-  const [isDisable, setIsDisable] = useState(true);
+  const [isDisable, setIsDisable] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -48,13 +48,17 @@ const SignupScreen = ({navigation}: any) => {
         (errorMessage.userName ||
           errorMessage.email ||
           errorMessage.password ||
-          errorMessage.confirmPassword))
+          errorMessage.confirmPassword)) ||
+      !values.userName ||
+      !values.email ||
+      !values.password ||
+      !values.confirmPassword
     ) {
       setIsDisable(true);
     } else {
       setIsDisable(false);
     }
-  }, [errorMessage]);
+  }, [errorMessage, values]);
 
   const handleChangeValue = (key: string, value: string) => {
     const data: any = {...values};
@@ -108,6 +112,7 @@ const SignupScreen = ({navigation}: any) => {
   };
 
   const handleRegister = async () => {
+    setIsLoading(true);
     const api = `/verification`;
 
     try {
@@ -116,9 +121,15 @@ const SignupScreen = ({navigation}: any) => {
         {email: values.email},
         'post'
       );
+      navigation.navigate('VerificationScreen', {
+        code: res.data.code,
+        ...values,
+      });
       console.log(res);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
