@@ -8,6 +8,7 @@ import AddNewScreen from './home/AddNewScreen';
 import SocialScreen from './socials/SocialScreen';
 import MapScreen from './maps/MapScreen';
 import ProfileScreen from './profiles/ProfileScreen';
+import Searchs from './socials/Searchs';
 
 export {
   HomeScreen,
@@ -20,4 +21,5 @@ export {
   SocialScreen,
   MapScreen,
   ProfileScreen,
+  Searchs,
 };

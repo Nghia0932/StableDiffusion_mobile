@@ -198,9 +198,9 @@ const VerificationScreen = ({navigation, route}: any) => {
       );
       setIsLoading(false);
       Alert.alert('Reset password was successfully!');
+      navigation.navigate('SigninScreen');
       dispatch(addAuth(res.data));
       await AsyncStorage.setItem('auth', JSON.stringify(res.data));
-      navigation.navigate('SigninScreen');
     } catch (error) {
       setIsLoading(false);
       setErrorMessage('Loi reset password !');

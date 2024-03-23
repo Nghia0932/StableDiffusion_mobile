@@ -15,13 +15,19 @@ import {
   CircleComponent,
   InputComponent,
   RowComponent,
+  SpaceComponent,
   TextComponent,
 } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {authSelector, removeAuth} from '../../redux/reducers/authReducer';
 import {globalStyle} from '../../styles/globalStyles';
 import {appColors} from '../../constants/appColors';
-import {HambergerMenu, Notification, SearchNormal1} from 'iconsax-react-native';
+import {
+  HambergerMenu,
+  Notification,
+  SearchNormal,
+  SearchNormal1,
+} from 'iconsax-react-native';
 
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -50,13 +56,28 @@ const HomeScreen = ({navigation}: any) => {
             <HambergerMenu size={24} color={appColors.white} />
           </TouchableOpacity>
           <View style={{flex: 1, alignItems: 'center'}}>
-            <RowComponent styles={{paddingTop: 15}}>
-              <InputComponent
-                value={search}
-                onChange={() => {}}
-                placehoder="Search..."
-                minHeight={30}
-                affix={<SearchNormal1 color={appColors.gray} />}
+            <RowComponent
+              styles={{paddingTop: 15}}
+              onPress={() => navigation.navigate('Searchs')}
+            >
+              <SearchNormal1
+                size={24}
+                color={appColors.white}
+                variant="TwoTone"
+              />
+              <View
+                style={{
+                  width: 1,
+                  backgroundColor: appColors.gray2,
+                  marginHorizontal: 10,
+                  height: 20,
+                }}
+              />
+              <TextComponent
+                flex={1}
+                text="Search..."
+                color={appColors.gray2}
+                size={16}
               />
             </RowComponent>
           </View>
@@ -81,6 +102,7 @@ const HomeScreen = ({navigation}: any) => {
             </CircleComponent>
           </View>
         </RowComponent>
+        <SpaceComponent height={20} />
       </View>
       <View style={[{flex: 1, backgroundColor: appColors.gray3}]}></View>
     </View>

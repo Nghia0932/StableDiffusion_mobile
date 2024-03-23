@@ -4,16 +4,22 @@ interface AuthState {
   id: string;
   email: string;
   accesstoken: string;
+  fullname: string;
+  photoUrl: string;
 }
 
 const initialState: {
   id: string;
   email: string;
   accesstoken: string;
+  fullname: string;
+  photoUrl: string;
 } = {
   id: '',
   email: '',
   accesstoken: '',
+  fullname: '',
+  photoUrl: '',
 };
 
 const authSlice = createSlice({
@@ -23,7 +29,8 @@ const authSlice = createSlice({
   },
   reducers: {
     addAuth: (state, action) => {
-      state.authData = action.payload;
+      const {id, email, accesstoken, fullname, photoUrl} = action.payload;
+      state.authData = {id, email, accesstoken, fullname, photoUrl};
     },
 
     removeAuth: (state, action) => {
