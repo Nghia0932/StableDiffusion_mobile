@@ -25,7 +25,6 @@ interface ErrorMessage {
   password: string;
   cofirmPassword: string;
 }
-
 const initValue = {
   userName: '',
   email: '',
@@ -124,7 +123,9 @@ const SignupScreen = ({navigation}: any) => {
       navigation.navigate('VerificationScreen', {
         code: res.data.code,
         ...values,
+        resetPassword: 0,
       });
+
       console.log(res);
       setIsLoading(false);
     } catch (error) {

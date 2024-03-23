@@ -20,13 +20,23 @@ import {useDispatch} from 'react-redux';
 import {addAuth} from '../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = ({navigation}: any) => {
+const SigninScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
   const dispatch = useDispatch();
   const emailValidation = Validate.email(email);
+
+  useEffect(() => {
+    const emailValidation = Validate.email(email);
+    if (!email || !password || !emailValidation) {
+      setIsDisable(true);
+    } else {
+      setIsDisable(false);
+    }
+  });
 
   const handleSignin = async () => {
     if (!(email && password)) {
@@ -39,6 +49,7 @@ const LoginScreen = ({navigation}: any) => {
     }
     setIsLoading(true);
     try {
+      setIsLoading(true);
       const res = await authenticationAPI.HandleAuthentication(
         '/login',
         {email, password},
@@ -52,9 +63,11 @@ const LoginScreen = ({navigation}: any) => {
         isRemember ? JSON.stringify(res.data) : email
       );
 
+      Alert.alert('', 'Đăng nhập thành công yeahhh');
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      Alert.alert('', 'Email hoặc password chưa đúng');
       setIsLoading(false);
     }
   };
@@ -71,7 +84,7 @@ const LoginScreen = ({navigation}: any) => {
         >
           <Image
             source={require('../../assets/images/text-logo.png')}
-            style={{width: 162, height: 114, marginBottom: 20}}
+            style={{width: 300, height: 200, marginBottom: 10}}
           />
         </SectionComponent>
         <SectionComponent>
@@ -115,6 +128,7 @@ const LoginScreen = ({navigation}: any) => {
         </SectionComponent>
         <SectionComponent>
           <ButtonComponent
+            disable={isDisable}
             text="SIGN IN"
             type="primary"
             textStyles={{fontWeight: 'bold'}}
@@ -138,4 +152,4 @@ const LoginScreen = ({navigation}: any) => {
   );
 };
 
-export default LoginScreen;
+export default SigninScreen;

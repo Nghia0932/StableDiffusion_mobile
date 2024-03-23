@@ -13,19 +13,19 @@ import {appColors} from '../constants/appColors';
 const SplashScreen = () => {
   return (
     <ImageBackground
-      source={require('../assets/images/backg_splashcreen.png')}
+      source={require('../assets/images/background-splashscreen.png')}
       style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
       imageStyle={{flex: 1}}
     >
       <Image
         source={require('../assets/images/text-logo.png')}
         style={{
-          width: appInfo.sizes.WIDTH * 0.8,
+          width: appInfo.sizes.WIDTH,
           resizeMode: 'contain',
         }}
       />
-      <SpaceComponent height={16} />
-      <ActivityIndicator color={appColors.gray} size={30} />
+
+      <ActivityIndicator color={appColors.gray} size={60} />
     </ImageBackground>
   );
 };

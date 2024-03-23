@@ -16,7 +16,7 @@ const HomeScreen = () => {
       <Button
         title="Sign out"
         onPress={async () => {
-          await AsyncStorage.setItem('auth', auth.email);
+          await AsyncStorage.clear();
           dispatch(removeAuth({}));
         }}
       />

@@ -17,18 +17,26 @@ import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addAuth} from '../../redux/reducers/authReducer';
 import {useDispatch} from 'react-redux';
+import {Lock} from 'iconsax-react-native';
+import {Validate} from '../../utils/validate';
 
 const VerificationScreen = ({navigation, route}: any) => {
-  const {code, email, password, userName} = route.params;
+  const {code, email, password, userName, resetPassword} = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const dispatch = useDispatch();
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [isDisable, setIsDisable] = useState(false);
 
   const [currentCode, setCurrentCode] = useState<string>(code);
   const [codeValues, setCodeValues] = useState<string[]>([]);
   const [newCode, setNewCode] = useState('');
   const [limitTime, setLimitTime] = useState(45);
 
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [newErrorMessage, setNewErrorMessage] = useState<any>();
+
+  const dispatch = useDispatch();
   const ref1 = useRef<any>();
   const ref2 = useRef<any>();
   const ref3 = useRef<any>();
@@ -53,6 +61,50 @@ const VerificationScreen = ({navigation, route}: any) => {
     console.log(item);
     setNewCode(item);
   }, [codeValues]);
+
+  useEffect(() => {
+    if (
+      !newErrorMessage ||
+      (newErrorMessage &&
+        (newErrorMessage.newPassword || newErrorMessage.confirmNewPassword)) ||
+      !newPassword ||
+      !confirmNewPassword
+    ) {
+      setIsDisable(true);
+    } else {
+      setIsDisable(false);
+    }
+    console.log(newErrorMessage, newPassword, confirmNewPassword);
+  }, [newErrorMessage, newPassword, confirmNewPassword]);
+
+  const formValidator = (key: string) => {
+    const data = {...newErrorMessage};
+    let message = '';
+    switch (key) {
+      case 'newPassword':
+        if (!newPassword) {
+          message = 'Vui lòng nhập password';
+        } else if (!Validate.password(newPassword)) {
+          message =
+            'Mật khẩu phải gồm có chữ hoa, chữ thường và ít nhất 1 ký tự đặc biệt';
+        } else {
+          message = '';
+        }
+        break;
+      case 'confirmNewPassword':
+        if (!confirmNewPassword) {
+          message = 'Vui lòng xác nhận lại password';
+        } else if (confirmNewPassword !== newPassword) {
+          message = 'Xác nhận password chưa khớp !!';
+        } else {
+          message = '';
+        }
+        break;
+    }
+
+    data[`${key}`] = message;
+    setNewErrorMessage(data);
+  };
 
   const handleChangeCode = (val: string, index: number) => {
     const data = codeValues.slice();
@@ -88,28 +140,39 @@ const VerificationScreen = ({navigation, route}: any) => {
       if (parseInt(codeValuesString) !== parseInt(currentCode)) {
         setErrorMessage('Invalid code !!!');
       } else {
-        setIsLoading(true);
-        setErrorMessage('');
-        const api = '/register';
-        const data = {
-          fullname: userName,
-          email: email,
-          password: password,
-        };
-        try {
-          const res: any = await authenticationAPI.HandleAuthentication(
-            api,
-            data,
-            'post'
-          );
-          setIsLoading(false);
-          Alert.alert('Đăng ký thành công yeahhhh');
-          dispatch(addAuth(res.data));
-          await AsyncStorage.setItem('auth', JSON.stringify(res.data));
-        } catch (error) {
-          setIsLoading(false);
-          setErrorMessage('Email đã đăng ký trước đó rồi !');
-          console.log(`can not register new user ${error}`);
+        if (resetPassword === 0) {
+          setIsLoading(true);
+          setErrorMessage('');
+          const api = '/register';
+          const data = {
+            fullname: userName,
+            email: email,
+            password: password,
+          };
+          try {
+            const res: any = await authenticationAPI.HandleAuthentication(
+              api,
+              data,
+              'post'
+            );
+            setIsLoading(false);
+            Alert.alert('Đăng ký thành công yeahhhh');
+            dispatch(addAuth(res.data));
+            await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+          } catch (error) {
+            setIsLoading(false);
+            setErrorMessage('Email đã đăng ký trước đó rồi !');
+            console.log(`can not register new user ${error}`);
+          }
+        }
+        if (resetPassword === 1) {
+          setIsLoading(true);
+          setErrorMessage('');
+
+          setTimeout(() => {
+            setShowResetPassword(true);
+            setIsLoading(false); // stop loading after showing reset password screen
+          }, 1000);
         }
       }
     } else {
@@ -119,7 +182,33 @@ const VerificationScreen = ({navigation, route}: any) => {
     }
   };
 
-  return (
+  const handleResetPassword = async () => {
+    setIsLoading(true);
+    setErrorMessage('');
+    const api = '/resetPassword';
+    const data = {
+      email: email,
+      password: newPassword,
+    };
+    try {
+      const res: any = await authenticationAPI.HandleAuthentication(
+        api,
+        data,
+        'post'
+      );
+      setIsLoading(false);
+      Alert.alert('Reset password was successfully!');
+      dispatch(addAuth(res.data));
+      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+      navigation.navigate('SigninScreen');
+    } catch (error) {
+      setIsLoading(false);
+      setErrorMessage('Loi reset password !');
+      console.log(`can not resetpassword new user ${error}`);
+    }
+  };
+
+  return !showResetPassword ? (
     <ContainerComponent isImageBackground isScroll back>
       <SectionComponent>
         <TextComponent
@@ -235,6 +324,74 @@ const VerificationScreen = ({navigation, route}: any) => {
           </RowComponent>
         )}
       </SectionComponent>
+      <LoadingModal visibale={isLoading} />
+    </ContainerComponent>
+  ) : (
+    <ContainerComponent isImageBackground isScroll back>
+      <SectionComponent>
+        <TextComponent
+          text="Reset Password"
+          title
+          styles={{fontWeight: 'bold'}}
+        />
+        <SpaceComponent height={26} />
+        <TextComponent text="Enter your new password." />
+        <InputComponent
+          value={newPassword}
+          placehoder="Your password"
+          onChange={(val) => setNewPassword(val)}
+          allowClear
+          isPassword
+          affix={<Lock size={22} color={appColors.gray} />}
+          onEnd={() => formValidator('newPassword')}
+        />
+        <TextComponent text="Re-enter your new password." />
+        <InputComponent
+          value={confirmNewPassword}
+          placehoder="Confirm password"
+          onChange={(val) => setConfirmNewPassword(val)}
+          allowClear
+          isPassword
+          affix={<Lock size={22} color={appColors.gray} />}
+          onEnd={() => formValidator('confirmNewPassword')}
+        />
+      </SectionComponent>
+      {newErrorMessage && (
+        <SectionComponent>
+          {Object.keys(newErrorMessage).map(
+            (error, index) =>
+              newErrorMessage[`${error}`] && (
+                <TextComponent
+                  text={newErrorMessage[`${error}`]}
+                  key={`error${index}`}
+                  color={appColors.danger}
+                />
+              )
+          )}
+        </SectionComponent>
+      )}
+      <SectionComponent styles={{marginTop: 40}}>
+        <ButtonComponent
+          disable={isDisable}
+          onPress={handleResetPassword}
+          text="CONTINUE"
+          type="primary"
+          icon={
+            <View
+              style={[
+                globalStyle.iconContainer,
+                {
+                  backgroundColor: isDisable ? '#525357' : '#3d56f0',
+                },
+              ]}
+            >
+              <ArrowRight size={20} color={appColors.white} />
+            </View>
+          }
+          iconFlex="right"
+        />
+      </SectionComponent>
+
       <LoadingModal visibale={isLoading} />
     </ContainerComponent>
   );

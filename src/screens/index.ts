@@ -4,6 +4,10 @@ import HomeScreen from './home/HomeScreen';
 import VerificationScreen from './auth/VerificationScreen';
 import ForgotPasswordScreen from './auth/ForgotPasswordScreen';
 import SignupScreen from './auth/SignupScreen';
+import AddNewScreen from './home/AddNewScreen';
+import SocialScreen from './socials/SocialScreen';
+import MapScreen from './maps/MapScreen';
+import ProfileScreen from './profiles/ProfileScreen';
 
 export {
   HomeScreen,
@@ -12,4 +16,8 @@ export {
   VerificationScreen,
   ForgotPasswordScreen,
   SignupScreen,
+  AddNewScreen,
+  SocialScreen,
+  MapScreen,
+  ProfileScreen,
 };

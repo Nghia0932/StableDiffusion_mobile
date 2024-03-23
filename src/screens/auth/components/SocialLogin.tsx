@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, Alert} from 'react-native';
 import React from 'react';
 import {
   ButtonComponent,
@@ -7,7 +7,25 @@ import {
 } from '../../../components';
 import {appColors} from '../../../constants/appColors';
 import Svg, {Path, Rect} from 'react-native-svg';
+
 const SocialLogin = () => {
+  const handleSigninWithGoogle = async () => {
+    Alert.alert('XXxx', 'Hiện tại chưa thể đăng nhập bằng google.');
+
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSigninWithFacebook = async () => {
+    Alert.alert('XXxx', 'Hiện tại chưa thể đăng nhập bằng Facebook.');
+
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SectionComponent styles={{alignItems: 'center'}}>
       <TextComponent
@@ -16,6 +34,7 @@ const SocialLogin = () => {
         color={appColors.gray}
       />
       <ButtonComponent
+        onPress={handleSigninWithGoogle}
         type="primary"
         color={appColors.white}
         text="Login with gu gồ"
@@ -43,6 +62,7 @@ const SocialLogin = () => {
         iconFlex="left"
       />
       <ButtonComponent
+        onPress={handleSigninWithFacebook}
         type="primary"
         color={appColors.white}
         text="Login with phây bút"
