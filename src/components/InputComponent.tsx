@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInputProps,
   KeyboardType,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import React, {ReactNode, useState} from 'react';
 import {EyeSlash} from 'iconsax-react-native';
@@ -24,6 +26,8 @@ interface Props {
   allowClear?: boolean;
   type?: KeyboardType;
   onEnd?: () => void;
+  style?: StyleProp<ViewStyle>;
+  minHeight?: number;
 }
 
 const InputComponent = (props: Props) => {
@@ -37,13 +41,20 @@ const InputComponent = (props: Props) => {
     allowClear,
     type,
     onEnd,
+    style,
+    minHeight,
   } = props;
   const [isShowPass, setIsShowPass] = useState(isPassword ?? false);
   return (
     <View style={styles.inputContainer}>
       {affix ?? affix}
       <TextInput
-        style={[styles.input, globalStyle.text]}
+        style={[
+          styles.input,
+          globalStyle.text,
+          style,
+          {minHeight: minHeight ?? 56},
+        ]}
         value={value}
         placeholder={placehoder ?? ''}
         onChangeText={(val) => onChange(val)}
@@ -84,7 +95,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: appColors.gray3,
     width: '100%',
-    minHeight: 56,
+
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 15,

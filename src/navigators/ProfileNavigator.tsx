@@ -1,15 +1,14 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../screens/home/HomeScreen';
+import {ProfileScreen} from '../screens';
 
-const ExploreNavigator = () => {
+const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     </Stack.Navigator>
   );
 };
 
-export default ExploreNavigator;
+export default ProfileNavigator;

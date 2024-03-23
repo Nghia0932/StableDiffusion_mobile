@@ -121,7 +121,7 @@ const SigninScreen = ({navigation}: any) => {
             </RowComponent>
             <ButtonComponent
               text="Forgot Password?"
-              type="text"
+              type="link"
               onPress={() => navigation.navigate('ForgotPasswordScreen')}
             />
           </RowComponent>
