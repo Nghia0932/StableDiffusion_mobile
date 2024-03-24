@@ -17,7 +17,7 @@ export const globalStyle = StyleSheet.create({
     backgroundColor: appColors.primary,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    minHeight: 56,
+    height: 56,
     flexDirection: 'row',
   },
   section: {

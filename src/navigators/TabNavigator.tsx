@@ -112,11 +112,16 @@ const TabNavigator = () => {
             />
           );
         },
+        tabBarVisible: route.name !== 'Add',
       })}
     >
       <Tab.Screen name="Home" component={HomeNavigator} />
       <Tab.Screen name="Social" component={SocialNavigator} />
-      <Tab.Screen name="Add" component={AddNewScreen} />
+      <Tab.Screen
+        name="Add"
+        component={AddNewScreen}
+        options={{tabBarStyle: {display: 'none'}}}
+      />
       <Tab.Screen name="Map" component={MapNavigator} />
       <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>

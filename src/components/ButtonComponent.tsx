@@ -22,6 +22,7 @@ interface Props {
   onPress?: () => void;
   iconFlex?: 'right' | 'left';
   disable?: boolean;
+  width?: number;
 }
 
 const ButtonComponent = (props: Props) => {
@@ -36,6 +37,7 @@ const ButtonComponent = (props: Props) => {
     onPress,
     iconFlex,
     disable,
+    width,
   } = props;
   return type === 'primary' ? (
     <View style={{alignItems: 'center'}}>
@@ -51,8 +53,8 @@ const ButtonComponent = (props: Props) => {
               : disable
               ? appColors.gray
               : appColors.primary,
-            marginBottom: 15,
-            width: '80%',
+            marginBottom: width ? 0 : 15,
+            width: width ? width : '80%',
           },
           styles,
         ]}
