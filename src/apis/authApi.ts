@@ -11,6 +11,20 @@ class AuthAPI {
       data,
     });
   };
+  HandleUpdateUser = async (
+    url: string,
+    formData: FormData,
+    method: 'post' | 'put'
+  ) => {
+    return await axiosClient(`${appInfo.BASE_URL}/auth${url}`, {
+      method: method,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  };
 }
+
 const authenticationAPI = new AuthAPI();
 export default authenticationAPI;

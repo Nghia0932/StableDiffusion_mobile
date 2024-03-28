@@ -13,13 +13,15 @@ const initialState: {
   email: string;
   accesstoken: string;
   fullname: string;
-  photoUrl: string;
+  photoBackGroundUrl: string;
+  photoAvatarUrl: string;
 } = {
   id: '',
   email: '',
   accesstoken: '',
   fullname: '',
-  photoUrl: '',
+  photoBackGroundUrl: '',
+  photoAvatarUrl: '',
 };
 
 const authSlice = createSlice({
@@ -29,17 +31,42 @@ const authSlice = createSlice({
   },
   reducers: {
     addAuth: (state, action) => {
-      const {id, email, accesstoken, fullname, photoUrl} = action.payload;
-      state.authData = {id, email, accesstoken, fullname, photoUrl};
+      const {
+        id,
+        email,
+        accesstoken,
+        fullname,
+        photoBackGroundUrl,
+        photoAvatarUrl,
+      } = action.payload;
+      state.authData = {
+        id,
+        email,
+        accesstoken,
+        fullname,
+        photoBackGroundUrl,
+        photoAvatarUrl,
+      };
     },
 
     removeAuth: (state, action) => {
       state.authData = initialState;
     },
+    updatePhotoAvatarUrl: (state, action) => {
+      state.authData.photoAvatarUrl = action.payload;
+    },
+    updatePhotoBackgroundUrl: (state, action) => {
+      state.authData.photoBackGroundUrl = action.payload;
+    },
   },
 });
 
 export const authReducer = authSlice.reducer;
-export const {addAuth, removeAuth} = authSlice.actions;
+export const {
+  addAuth,
+  removeAuth,
+  updatePhotoAvatarUrl,
+  updatePhotoBackgroundUrl,
+} = authSlice.actions;
 
 export const authSelector = (state: any) => state.authReducer.authData;

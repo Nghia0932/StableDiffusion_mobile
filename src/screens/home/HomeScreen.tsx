@@ -56,10 +56,7 @@ const HomeScreen = ({navigation}: any) => {
             <HambergerMenu size={24} color={appColors.white} />
           </TouchableOpacity>
           <View style={{flex: 1, alignItems: 'center'}}>
-            <RowComponent
-              styles={{paddingTop: 15}}
-              onPress={() => navigation.navigate('Searchs')}
-            >
+            <RowComponent onPress={() => navigation.navigate('Searchs')}>
               <SearchNormal1
                 size={24}
                 color={appColors.white}

@@ -11,7 +11,7 @@ import {globalStyle} from '../styles/globalStyles';
 import {useNavigation} from '@react-navigation/native';
 import RowComponent from './RowComponent';
 import ButtonComponent from './ButtonComponent';
-import {ArrowLeft} from 'iconsax-react-native';
+import {ArrowLeft, Back} from 'iconsax-react-native';
 import {appColors} from '../constants/appColors';
 import TextComponent from './TextComponent';
 
@@ -45,7 +45,7 @@ const ContainerComponent = (props: Props) => {
                 onPress={() => navigation.goBack()}
                 style={{marginRight: 12}}
               >
-                <ArrowLeft size={24} color={appColors.text} />
+                <Back size={24} color={appColors.text} />
               </TouchableOpacity>
             )}
             {title ? (

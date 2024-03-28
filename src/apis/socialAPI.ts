@@ -2,7 +2,7 @@ import {appInfo} from '../constants/appInfors';
 import axiosClient from './axiosClient';
 import FormData from 'form-data';
 class SocialAPI {
-  HandleSocial = async (
+  HandlePostSocial = async (
     url: string,
     formData: FormData, // Thêm đối số formData kiểu FormData
     method?: 'get' | 'post' | 'put' | 'delete'
@@ -18,6 +18,16 @@ class SocialAPI {
         ...headers, // Thêm headers được truyền vào
         'Content-Type': 'multipart/form-data', // Đặt header 'Content-Type' cho dữ liệu form-data
       }, // Thêm headers vào request
+    });
+  };
+  HandleGetSocial = async (
+    url: string,
+    data?: any,
+    method?: 'get' | 'post' | 'put' | 'delete'
+  ) => {
+    return await axiosClient(`${appInfo.BASE_URL}/social${url}`, {
+      method: method ?? 'get',
+      data,
     });
   };
 }

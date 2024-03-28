@@ -22,7 +22,13 @@ import FormData from 'form-data';
 import {appColors} from '../../constants/appColors';
 import {useDispatch, useSelector} from 'react-redux';
 import {authSelector} from '../../redux/reducers/authReducer';
-import {ArrowUp, ArrowSquareDown, Back, Size} from 'iconsax-react-native';
+import {
+  ArrowUp,
+  ArrowSquareDown,
+  GalleryExport,
+  Gemini,
+  CloseCircle,
+} from 'iconsax-react-native';
 import {globalStyle} from '../../styles/globalStyles';
 import {StatusBar} from 'expo-status-bar';
 import socialAPI from '../../apis/socialAPI';
@@ -84,7 +90,7 @@ const AddNewScreen = ({navigation}: any) => {
     const api = '/postContent';
     setIsLoading(true);
     try {
-      const res = await socialAPI.HandleSocial(api, data, 'post');
+      const res = await socialAPI.HandlePostSocial(api, data, 'post');
       setContent('');
       setImage(null);
       navigation.navigate('HomeScreen');
@@ -133,7 +139,9 @@ const AddNewScreen = ({navigation}: any) => {
               size={16}
               text={user.fullname}
             />
-            <Text style={[styles.optionsContainer, {color: appColors.primary}]}>
+            <Text
+              style={[styles.optionsContainerText, {color: appColors.primary}]}
+            >
               {optionText}
             </Text>
             <TouchableOpacity
@@ -202,9 +210,21 @@ const AddNewScreen = ({navigation}: any) => {
             placeholder="Share your thinks..."
           />
           <SpaceComponent height={22} />
-          {image && (
-            <Image source={{uri: image}} style={{width: 250, height: 250}} />
-          )}
+          {image ? (
+            <View style={{position: 'relative', height: 260}}>
+              <Image source={{uri: image}} style={{width: 300, height: 250}} />
+              <TouchableOpacity
+                style={{position: 'absolute', top: -10, right: 20}}
+                onPress={() => setImage(null)}
+              >
+                <CloseCircle
+                  size={32}
+                  variant={'Bold'}
+                  color={appColors.text}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </SectionComponent>
       </ContainerComponent>
       <View style={{justifyContent: 'space-between'}}>
@@ -217,15 +237,24 @@ const AddNewScreen = ({navigation}: any) => {
               paddingVertical: 0,
             },
           ]}
-          width={120}
+          width={125}
           color={appColors.gray}
           textColor="#f7ff09"
           text="Generate AI"
           type="primary"
           textStyles={{fontSize: 16}}
+          icon={<Gemini size={22} variant={'Bold'} color="#f7ff09" />}
+          iconFlex={'left'}
         />
         <View style={[styles.viewBottomRight]}>
-          <Button title="Image" onPress={pickImage} />
+          <TouchableOpacity onPress={pickImage}>
+            <GalleryExport
+              size={52}
+              variant="Bold"
+              color={appColors.primary}
+              style={{justifyContent: 'center'}}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       <LoadingModal visibale={isLoading} />
@@ -251,6 +280,16 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     padding: 5,
     elevation: 3,
+    width: 95,
+  },
+  optionsContainerText: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    top: 15,
+    right: 0,
+    paddingLeft: 10,
+    padding: 5,
     width: 95,
   },
   optionItem: {
