@@ -1,36 +1,27 @@
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  StatusBar,
-  ImageBackground,
-} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Image, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   SectionComponent,
   ViewContentSocial,
-  RowComponent,
   TextComponent,
 } from '../../components';
-
 import * as ImagePicker from 'expo-image-picker';
 import {appColors} from '../../constants/appColors';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   authSelector,
-  removeAuth,
   updatePhotoAvatarUrl,
   updatePhotoBackgroundUrl,
 } from '../../redux/reducers/authReducer';
 import {globalStyle} from '../../styles/globalStyles';
-import {SearchNormal1, PenAdd, PathToolSquare} from 'iconsax-react-native';
+import {PenAdd, PathToolSquare} from 'iconsax-react-native';
 import {LoadingModal} from '../../modals';
 import socialAPI from '../../apis/socialAPI';
 import authenticationAPI from '../../apis/authApi';
 import {ScrollView} from 'react-native-gesture-handler';
+import TabNavigator from '../../navigators/TabNavigator';
 
-const ProfileScreen = ({navigation}: any) => {
+const ProfileScreen = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
 
@@ -39,6 +30,20 @@ const ProfileScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const user = useSelector(authSelector);
+  const [hideTabBar, setHideTabBar] = useState(false);
+  const [prevOffset, setPrevOffset] = useState(0);
+  const [refresh, setRefresh] = useState(true);
+  const handleScroll = (event: any) => {
+    const currentOffset = event.nativeEvent.contentOffset.y;
+    const isScrollingUp = currentOffset < prevOffset;
+    // Lưu lại vị trí scroll hiện tại để so sánh với scroll tiếp theo
+    setPrevOffset(currentOffset);
+    if (isScrollingUp) {
+      setHideTabBar(false);
+    } else {
+      setHideTabBar(true);
+    }
+  };
 
   const pickPhotoBackground = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -98,6 +103,39 @@ const ProfileScreen = ({navigation}: any) => {
     }
   };
 
+  const deleteContent = async (_id: any) => {
+    setIsLoading(true);
+    const api = '/deleteContentById';
+    try {
+      const res = await socialAPI.HandleGetSocial(api, {_id}, 'delete');
+      console.log(res);
+      setIsLoading(false);
+      setRefresh(true);
+    } catch (error) {
+      console.log('loi xoa content', error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteConfirmation = (_id: any) => {
+    Alert.alert(
+      '',
+      'Bạn muốn xóa bài viết này?',
+      [
+        {
+          text: 'Đồng ý',
+          onPress: () => deleteContent(_id),
+        },
+        {
+          text: 'Hủy bỏ',
+          onPress: () => ({}),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: true}
+    );
+  };
+
   const listContentSocial = async () => {
     const api = '/getContentOneEmail';
     const email = user.email;
@@ -105,64 +143,45 @@ const ProfileScreen = ({navigation}: any) => {
     try {
       const res = await socialAPI.HandleGetSocial(api, {email}, 'post');
       setIsLoading(false);
-      const dataList = res.data.data;
-      const extractedData = dataList.map((post: any) => ({
-        imageUri:
-          post.imageUrls && post.imageUrls.length > 0
-            ? post.imageUrls[0]
-            : null, // Lấy ảnh đầu tiên trong mảng imageUrls
-        updateAt: post.updateAt,
-        content: post.content,
-      }));
-      setUserPosts(extractedData);
+      if (res.data !== null) {
+        const dataList = res.data.data;
+        const extractedData = dataList.map((post: any) => ({
+          imageUri:
+            post.imageUrls && post.imageUrls.length > 0
+              ? post.imageUrls[0]
+              : null, // Lấy ảnh đầu tiên trong mảng imageUrls
+          updateAt: post.updateAt,
+          content: post.content,
+          _id: post._id,
+        }));
+        setUserPosts(extractedData);
+      } else {
+        console.log('ko co content nao duoc post');
+      }
     } catch (error) {
       console.log('Lỗi ko lay duoc ds post:', error);
     }
   };
   useEffect(() => {
-    listContentSocial();
-  }, []);
+    if (route.params?.refresh || refresh == true) {
+      listContentSocial(); // Gọi hàm khi nhận được dữ liệu từ PostScreen
+      setRefresh(false);
+      navigation.setParams({refresh: false});
+      // Đặt lại trạng thái refresh
+    }
+  }, [route.params?.refresh, deleteContent]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      navigation.setParams({hideTabBar: true});
+    });
+
+    return unsubscribe;
+  }, [hideTabBar]);
 
   return (
-    <ScrollView>
+    <ScrollView onScroll={handleScroll}>
       <View style={{justifyContent: 'center', backgroundColor: '#ffff'}}>
-        {/*<View style={[globalStyle.container]}>
-          <StatusBar barStyle={'light-content'} />
-          <View
-            style={{
-              backgroundColor: 'rgba(81, 143, 205, 0.5)',
-              height: 65,
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 50,
-              padding: StatusBar.currentHeight,
-            }}
-          >
-            <RowComponent>
-              <View style={{flex: 1, justifyContent: 'center'}}>
-                <RowComponent onPress={() => navigation.navigate('Searchs')}>
-                  <SearchNormal1
-                    size={24}
-                    color={appColors.white}
-                    variant="TwoTone"
-                  />
-                  <View
-                    style={{
-                      width: 1,
-                      backgroundColor: appColors.gray2,
-                      height: 20,
-                    }}
-                  />
-                  <TextComponent
-                    flex={1}
-                    text="  Search..."
-                    color={appColors.gray2}
-                    size={16}
-                  />
-                </RowComponent>
-              </View>
-            </RowComponent>
-          </View>
-        </View>*/}
         <SectionComponent styles={{paddingHorizontal: 0}}>
           {!user.photoBackGroundUrl ? (
             <View>
@@ -287,18 +306,23 @@ const ProfileScreen = ({navigation}: any) => {
           </View>
         </SectionComponent>
         <View style={styles.divider}></View>
-        {userPosts.map((post, index) => (
-          <ViewContentSocial
-            key={index}
-            avatarUri={
-              user.photoAvatarUrl ? user.photoAvatarUrl.toString() : ''
-            }
-            userName={user.fullname}
-            updateAt={post.updateAt}
-            content={post.content}
-            imageUri={post.imageUri !== 'null' ? post.imageUri : 'null'}
-          />
-        ))}
+        {userPosts &&
+          userPosts.map((post, index) => (
+            <ViewContentSocial
+              showIcon={true}
+              key={index}
+              avatarUri={
+                user.photoAvatarUrl ? user.photoAvatarUrl.toString() : ''
+              }
+              userName={user.fullname}
+              updateAt={post.updateAt}
+              content={post.content}
+              imageUri={post.imageUri !== 'null' ? post.imageUri : 'null'}
+              onPress={() => {
+                handleDeleteConfirmation(post._id);
+              }}
+            />
+          ))}
         <LoadingModal visibale={isLoading} />
       </View>
     </ScrollView>

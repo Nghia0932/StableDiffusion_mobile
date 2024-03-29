@@ -43,6 +43,7 @@ const AddNewScreen = ({navigation}: any) => {
   const [isDisable, setIsDisable] = useState(true);
   const [image, setImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const dispatch = useDispatch();
   const user = useSelector(authSelector);
@@ -93,9 +94,11 @@ const AddNewScreen = ({navigation}: any) => {
       const res = await socialAPI.HandlePostSocial(api, data, 'post');
       setContent('');
       setImage(null);
-      navigation.navigate('HomeScreen');
       setIsLoading(false);
       console.log(res);
+      navigation.navigate('ProfileScreen', {'refresh': true});
+      navigation.navigate('HomeScreen', {'refresh': true});
+      setRefresh(!refresh);
     } catch (error) {
       console.log('error post social ', error);
       setIsLoading(false);

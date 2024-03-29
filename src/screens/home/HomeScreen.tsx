@@ -7,16 +7,19 @@ import {
   PushNotification,
   TextInput,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   ButtonComponent,
   CircleComponent,
   InputComponent,
   RowComponent,
+  SectionComponent,
   SpaceComponent,
   TextComponent,
+  ViewContentSocial,
 } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {authSelector, removeAuth} from '../../redux/reducers/authReducer';
@@ -25,18 +28,62 @@ import {appColors} from '../../constants/appColors';
 import {
   HambergerMenu,
   Notification,
+  PathToolSquare,
+  PenAdd,
   SearchNormal,
   SearchNormal1,
 } from 'iconsax-react-native';
+import {LoadingModal} from '../../modals';
+import socialAPI from '../../apis/socialAPI';
+import authenticationAPI from '../../apis/authApi';
 
-const HomeScreen = ({navigation}: any) => {
+const HomeScreen = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
+  const [refresh, setRefresh] = useState(true);
+  const [photoBackground, setPhotoBackground] = useState<string | null>(null);
+  const [photoAvatar, setPhotoAvatar] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [userPosts, setUserPosts] = useState<any[]>([]);
+  const user = useSelector(authSelector);
+  const [hideTabBar, setHideTabBar] = useState(false);
+  const [prevOffset, setPrevOffset] = useState(0);
 
-  const auth = useSelector(authSelector);
+  const listContentSocial = async () => {
+    const api = '/getContentOneEmail';
+    const email = user.email;
+    try {
+      const res = await socialAPI.HandleGetSocial(api, {email}, 'post');
+      setIsLoading(false);
+      if (res.data !== null) {
+        const dataList = res.data.data;
+        const extractedData = dataList.map((post: any) => ({
+          imageUri:
+            post.imageUrls && post.imageUrls.length > 0
+              ? post.imageUrls[0]
+              : null, // Lấy ảnh đầu tiên trong mảng imageUrls
+          updateAt: post.updateAt,
+          content: post.content,
+        }));
+        setUserPosts(extractedData);
+      } else {
+        console.log('ko co content nao duoc post');
+      }
+    } catch (error) {
+      console.log('Lỗi ko lay duoc ds post:', error);
+    }
+  };
+  useEffect(() => {
+    if (route.params?.refresh || refresh == true) {
+      listContentSocial(); // Gọi hàm khi nhận được dữ liệu từ PostScreen
+      setRefresh(false);
+      navigation.setParams({refresh: false});
+      // Đặt lại trạng thái refresh
+    }
+  }, [route.params?.refresh]);
 
   return (
-    <View style={[globalStyle.container, {backgroundColor: appColors.gray3}]}>
+    <View style={[globalStyle.container, {backgroundColor: appColors.white}]}>
       <StatusBar barStyle={'light-content'} />
 
       <View
@@ -101,7 +148,25 @@ const HomeScreen = ({navigation}: any) => {
         </RowComponent>
         <SpaceComponent height={20} />
       </View>
-      <View style={[{flex: 1, backgroundColor: appColors.gray3}]}></View>
+      <ScrollView>
+        <View style={{justifyContent: 'center', backgroundColor: '#ffff'}}>
+          <View style={[styles.divider]}></View>
+          {userPosts &&
+            userPosts.map((post, index) => (
+              <ViewContentSocial
+                key={index}
+                avatarUri={
+                  user.photoAvatarUrl ? user.photoAvatarUrl.toString() : ''
+                }
+                userName={user.fullname}
+                updateAt={post.updateAt}
+                content={post.content}
+                imageUri={post.imageUri !== 'null' ? post.imageUri : 'null'}
+              />
+            ))}
+          <LoadingModal visibale={isLoading} />
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -125,5 +190,10 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
     flex: 1,
+  },
+  divider: {
+    backgroundColor: appColors.gray2,
+    marginVertical: 10,
+    padding: 5,
   },
 });

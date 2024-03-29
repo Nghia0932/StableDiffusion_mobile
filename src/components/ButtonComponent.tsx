@@ -10,6 +10,7 @@ import React, {ReactNode} from 'react';
 import TextComponent from './TextComponent';
 import {globalStyle} from '../styles/globalStyles';
 import {appColors} from '../constants/appColors';
+import RowComponent from './RowComponent';
 
 interface Props {
   icon?: ReactNode;
@@ -78,11 +79,14 @@ const ButtonComponent = (props: Props) => {
     </View>
   ) : (
     <TouchableOpacity onPress={onPress}>
-      <TextComponent
-        flex={0}
-        text={text}
-        color={type === 'link' ? appColors.primary : appColors.text}
-      />
+      <RowComponent>
+        {icon && iconFlex === 'left' && icon}
+        <TextComponent
+          flex={0}
+          text={text}
+          color={type === 'link' ? appColors.primary : appColors.text}
+        />
+      </RowComponent>
     </TouchableOpacity>
   );
 };

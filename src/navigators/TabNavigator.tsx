@@ -6,6 +6,7 @@ import MapNavigator from './MapNavigator';
 import SocialNavigator from './SocialNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import {appColors} from '../constants/appColors';
+import {useRoute} from '@react-navigation/native';
 import {
   Home2,
   Profile,
@@ -23,6 +24,7 @@ import {globalStyle} from '../styles/globalStyles';
 import DrawerNavigator from './DrawerNavigator';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
+  const route = useRoute();
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({

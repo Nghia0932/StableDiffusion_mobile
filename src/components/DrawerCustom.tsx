@@ -62,16 +62,7 @@ const DrawerCustom = ({navigation}: any) => {
       title: 'Message',
       icon: <Message2 size={size} color={color} />,
     },
-    {
-      key: 'Calendar',
-      title: 'Calendar',
-      icon: <Calendar size={size} color={color} />,
-    },
-    {
-      key: 'Bookmark',
-      title: 'Bookmark',
-      icon: <Bookmark2 size={size} color={color} />,
-    },
+
     {
       key: 'ContactUs',
       title: 'ContactUs',
@@ -105,8 +96,11 @@ const DrawerCustom = ({navigation}: any) => {
             });
           }}
         >
-          {user.photoUrl ? (
-            <Image source={{uri: user.photoUrl}} style={[localStyles.avatar]} />
+          {user.photoAvatarUrl ? (
+            <Image
+              source={{uri: user.photoAvatarUrl.toString()}}
+              style={[localStyles.avatar]}
+            />
           ) : (
             <View
               style={[localStyles.avatar, {backgroundColor: appColors.gray2}]}
